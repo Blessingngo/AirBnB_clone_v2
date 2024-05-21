@@ -1,74 +1,55 @@
 #!/usr/bin/python3
+"""Start web application with two routings
+"""
+
 from flask import Flask, render_template
-"""import class Flask, render_template method"""
-
-
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
-def hello_hbnb():
-    """displays text
-    Returns:
-        text
+@app.route('/')
+def hello():
+    """Return string when route queried
     """
-    return "Hello HBNB!"
+    return 'Hello HBNB!'
 
 
-@app.route('/hbnb', strict_slashes=False)
-def display_hbnb():
-    """displays text
-    Returns:
-        text
+@app.route('/hbnb')
+def hbnb():
+    """Return string when route queried
     """
-    return "HBNB"
+    return 'HBNB'
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def display_C(text):
-    """displays text
-    Args:
-        text (str): text
-    Returns:
-        text
+@app.route('/c/<text>')
+def c_is_fun(text):
+    """Return reformatted text
     """
-    return 'C %s' % text.replace('_', ' ')
+    return 'C ' + text.replace('_', ' ')
 
 
-@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def display_python(text):
-    """displays text
-    Args:
-        text (str): text
-    Returns:
-        text
+@app.route('/python/')
+@app.route('/python/<text>')
+def python_with_text(text='is cool'):
+    """Reformat text based on optional variable
     """
-    return 'Python %s' % text.replace('_', ' ')
+    return 'Python ' + text.replace('_', ' ')
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
-def display_num(n):
-    """displays text
-    Args:
-        n (int): number
-    Returns:
-        string
+@app.route('/number/<int:n>')
+def number(n=None):
+    """Allow request if path variable is a valid integer
     """
-    return "%d is a number" % n
+    return str(n) + ' is a number'
 
 
-@app.route('/number_template/<int:n>', strict_slashes=False)
-def display_HTML(n):
-    """displays text
-    Args:
-        n (int): number
-    Returns:
-        HTML page
+@app.route('/number_template/<int:n>')
+def number_template(n):
+    """Retrieve template for request
     """
-    return render_template('5-number.html', n=n)
+    path = '5-number.html'
+    return render_template(path, n=n)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    app.url_map.strict_slashes = False
     app.run(host='0.0.0.0', port=5000)
